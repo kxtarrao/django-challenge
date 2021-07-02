@@ -9,19 +9,14 @@ from django.utils.encoding import python_2_unicode_compatible
 class Company(models.Model):
     name = models.CharField(max_length=150)
     bic = models.CharField(max_length=150, blank=True)
+    order_sum = models.DecimalField(max_digits=18, decimal_places=9, default=float(0))
+    order_count = models.IntegerField(default=float(0))
 
     def get_order_count(self):
-        orders = 0
-        for order in self.orders.all():
-            orders += 1
-        return orders
+        return self.order_count
 
     def get_order_sum(self):
-        total_sum = 0
-        for contact in self.contacts.all():
-            for order in contact.orders.all():
-                total_sum += order.total
-        return total_sum
+        return self.order_sum
 
 
 class Contact(models.Model):
@@ -30,12 +25,10 @@ class Contact(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField()
+    order_count = models.IntegerField(default=float(0))
 
     def get_order_count(self):
-        orders = 0
-        for order in self.orders.all():
-            orders += 1
-        return orders
+        return self.order_count
 
 
 @python_2_unicode_compatible

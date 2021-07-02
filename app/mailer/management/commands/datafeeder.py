@@ -187,13 +187,11 @@ class Command(BaseCommand):
         for idx in range(0, companies):
             company = Company()
             company.name = generate_company_name()
-            self.stdout.write("company %d/%d: %s" % (idx + 1, companies, company.name))
             company.bic = "%s-%s" % (random.randint(1000000, 9999999),
                                      random.randint(100, 999))
             company.save()
 
             max_contacts = contacts + random.randint(1, 10)
-
             for cdx in range(contacts, max_contacts):
                 contact = Contact()
                 contact.first_name = random.choice(firstnames)
@@ -208,6 +206,12 @@ class Command(BaseCommand):
                     order.order_number = uuid4().hex
                     order.company = company
                     order.contact = contact
-                    order.total = random.random() * random.randint(100, 10000)
                     order.order_date = now() - datetime.timedelta(days=-past)
+                    order.total = random.random() * random.randint(100, 10000)
+                    company.order_sum += order.total
+                    company.order_count += 1
+                    contact.order_count += 1
                     order.save()
+                    contact.save()
+                    company.save()
+            self.stdout.write(f"company {idx + 1}/{companies}: {company.name}")
