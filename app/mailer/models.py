@@ -10,10 +10,9 @@ class Company(models.Model):
     name = models.CharField(max_length=150)
     bic = models.CharField(max_length=150, blank=True)
     order_sum = models.DecimalField(max_digits=18, decimal_places=9, default=float(0))
-    order_count = models.IntegerField(default=float(0))
 
     def get_order_count(self):
-        return self.order_count
+        return self.orders.all().count()
 
     def get_order_sum(self):
         return self.order_sum
@@ -25,10 +24,9 @@ class Contact(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField()
-    order_count = models.IntegerField(default=float(0))
 
     def get_order_count(self):
-        return self.order_count
+        return self.orders.all().count()
 
 
 @python_2_unicode_compatible
